@@ -525,12 +525,16 @@ ps: `__metaclass__`是创建类时起作用.所以我们可以分别使用`__met
 
 ### 1 使用`__new__`方法
 
+注： python3中object类的new方法不支持参数
+修改如下
+
 ```python
 class Singleton(object):
     def __new__(cls, *args, **kw):
         if not hasattr(cls, '_instance'):
             orig = super(Singleton, cls)
             cls._instance = orig.__new__(cls, *args, **kw)
+			# cls._instance = orig.__new__(cls)  # python3
         return cls._instance
 
 class MyClass(Singleton):
