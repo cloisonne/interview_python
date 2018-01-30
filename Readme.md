@@ -526,7 +526,7 @@ ps: `__metaclass__`是创建类时起作用.所以我们可以分别使用`__met
 ### 1 使用`__new__`方法
 
 注： python3中object类的new方法不支持参数
-修改如下
+修改如下：
 
 ```python
 class Singleton(object):
