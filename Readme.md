@@ -525,25 +525,37 @@ ps: `__metaclass__`是创建类时起作用.所以我们可以分别使用`__met
 
 ### 1 使用`__new__`方法
 
-注： python3中object类的new方法不支持参数
-修改如下：
-
 ```python
 class Singleton(object):
-    def __new__(cls, *args, **kw):
-        if not hasattr(cls, '_instance'):
-            orig = super(Singleton, cls)
-            cls._instance = orig.__new__(cls, *args, **kw)
-            # cls._instance = orig.__new__(cls)  # python3
-        return cls._instance
+    _instances = {}
+    def __new__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton,cls).__new__(cls)
+        return  cls._instances[cls]
 
 class MyClass(Singleton):
-    a = 1
+    def __init__(self,s):
+        self.s = s
+    def __str__(self):
+        return self.s
+
+class SubClass(MyClass):
+    pass
+
+s1 = MyClass('first')
+print(id(s1),s1)
+s2 = SubClass('second')
+print(id(s2),s2)
+print(id(s1),s1)
+print(isinstance(s1,MyClass))
+print(isinstance(s2,SubClass))
 ```
 
 ### 2 共享属性
 
 创建实例时把所有实例的`__dict__`指向同一个字典,这样它们具有相同的属性和方法.
+
+**是一个instance  但不是一个id**
 
 ```python
 
@@ -561,9 +573,9 @@ class MyClass2(Borg):
 ### 3 装饰器版本
 
 ```python
-def singleton(cls, *args, **kw):
+def singleton(cls):
     instances = {}
-    def getinstance():
+    def getinstance(*args, **kw):
         if cls not in instances:
             instances[cls] = cls(*args, **kw)
         return instances[cls]
