@@ -534,7 +534,7 @@ class Singleton(object):
         if not hasattr(cls, '_instance'):
             orig = super(Singleton, cls)
             cls._instance = orig.__new__(cls, *args, **kw)
-			# cls._instance = orig.__new__(cls)  # python3
+            # cls._instance = orig.__new__(cls)  # python3
         return cls._instance
 
 class MyClass(Singleton):
